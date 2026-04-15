@@ -144,7 +144,28 @@ Ekspor data penjualan untuk keperluan akuntansi atau dokumentasi eksternal.
 
 ---
 
-## 4. Fitur Cashier
+## 4. Fitur Authentication (Shared)
+ 
+ ### 4.1 Login & Logout
+ 
+ Mekanisme keamanan untuk mengakses sistem bagi Owner dan Cashier.
+ 
+ **Acceptance Criteria:**
+ - [ ] Pengguna dapat masuk (Login) menggunakan kredensial email dan password.
+ - [ ] Pengguna dapat keluar (Logout) untuk mengakhiri sesi.
+ - [ ] Sistem memberikan token akses (JWT) yang valid setelah login sukses.
+ 
+ ### 4.2 Registrasi Owner Utama
+ 
+ Pendaftaran akun admin pertama kali saat instalasi sistem.
+ 
+ **Acceptance Criteria:**
+ - [ ] Menyediakan endpoint khusus untuk registrasi Owner pertama.
+ - [ ] Mencegah registrasi Owner ganda jika sudah ada akun Owner aktif.
+ 
+ ---
+ 
+ ## 5. Fitur Cashier
 
 ### 4.1 Manajemen Shift
 
@@ -242,4 +263,206 @@ Hal-hal berikut secara tegas **tidak masuk** dalam lingkup pengerjaan versi ini 
 - Manajemen supplier / purchase order
 
 ---
+ 
+ ## 8. Git & Workflow Development
+ 
+ ### 8.1 Tujuan
+ 
+ - **`main`** selalu stabil dan siap deploy.
+ - **`develop`** untuk integrasi semua fitur sebelum rilis.
+ - Perubahan dikerjakan terisolasi di **feature branch** agar paralel dan mudah di-review.
+ 
+ ### 8.2 Struktur Branch (Arsitektur)
+ 
+ ```mermaid
+ flowchart LR
+ 	A[Developer Workstation] -->|git push| B[(GitHub Remote)]
+ 	B --> C[Pull Request]
+ 	C -->|review + checks| D[develop]
+ 	D -->|release merge| E[main]
+ 	E -->|tag| F[(Release Tags)]
+ 
+ 	subgraph Branches
+ 		D
+ 		E
+ 	end
+ 
+ 	subgraph Feature Work
+ 		G[feature/*]
+ 		H[fix/*]
+ 		I[hotfix/*]
+ 	end
+ 
+ 	G --> C
+ 	H --> C
+ 	I -->|PR to main| E
+ 	I -->|back-merge| D
+ ```
+ 
+ ### 8.3 Peran Tiap Branch
+ 
+ - **`main`**
+     - Berisi kode produksi.
+     - Setiap merge ke `main` harus lewat PR dan menghasilkan **tag versi**.
+ - **`develop`**
+     - Branch integrasi untuk QA internal.
+     - Tempat semua `feature/*` dan `fix/*` digabungkan.
+ - **`feature/<nama-fitur>`**
+     - Untuk pengembangan fitur baru.
+     - Dibuat dari `develop` dan merge kembali ke `develop` via PR.
+ - **`fix/<nama-bug>`**
+     - Untuk bugfix non-kritis yang ditujukan ke `develop`.
+ - **`hotfix/<nama-issue>`**
+     - Untuk perbaikan kritis produksi.
+     - Dibuat dari `main`, merge ke `main`, lalu **back-merge** ke `develop`.
+ 
+ ### 8.4 Konvensi Penamaan Branch
+ 
+ - `feature/<nama-fitur>`
+ - `fix/<nama-bug>`
+ - `hotfix/<nama-issue>`
+ - `chore/<nama-task>`
+ - `docs/<nama-dokumen>`
+ 
+ **Contoh:**
+ 
+ - `feature/product-management`
+ - `feature/cashier-shift`
+ - `feature/midtrans-integration`
+ - `fix/stock-not-decreasing-after-payment`
+ - `hotfix/login-jwt-expired`
+ - `docs/update-api-contract`
+ 
+ ### 8.5 Aturan PR (Governance)
+ 
+ - PR target default: **ke `develop`**.
+ - PR wajib:
+     - Deskripsi singkat perubahan.
+     - Checklist testing (minimal: unit test atau manual steps).
+     - Screenshot untuk perubahan UI (if ada).
+ - Strategi merge yang disarankan: **Squash and merge** agar riwayat `develop` rapi.
+ - CI checks (minimal):
+     - Lint.
+     - Unit test.
+     - Build.
+ 
+ ### 8.6 Alur Release (Arsitektur)
+ 
+ ```mermaid
+ sequenceDiagram
+     actor Dev as Developer
+     participant GH as GitHub
+     participant DV as develop
+     participant MN as main
+     participant RL as Release/Tag
+ 
+     Dev->>GH: Push feature/*
+     Dev->>GH: Open PR to develop
+     GH-->>Dev: Review + checks
+     GH->>DV: Merge PR (squash)
+     Dev->>DV: QA / smoke test
+     Dev->>GH: Open PR develop -> main (release)
+     GH->>MN: Merge release PR
+     Dev->>RL: Create tag vX.Y.Z on main
+ ```
+ 
+ ### 8.7 Versioning & Tagging
+ 
+ Gunakan **Semantic Versioning**: `vMAJOR.MINOR.PATCH`.
+ 
+ - **MAJOR**: breaking change.
+ - **MINOR**: fitur baru, backward compatible.
+ - **PATCH**: bugfix.
+ 
+ **Aturan:**
+ 
+ - Tag dibuat **di `main`** setelah release merge.
+ - Pesan merge release di `main` mengandung versi, contoh: `release: v1.0.0`.
+ 
+ ---
+ 
+ ## 9. Git Command Flow
+ 
+ ### 9.1 Setup Repository Awal
+ 
+ ```bash
+ # clone
+ git clone https://github.com/sulthan18/warungpos.git
+ cd warungpos
+ 
+ # pastikan main up-to-date
+ git checkout main
+ git pull origin main
+ 
+ # buat develop dari main
+ git checkout -b develop
+ git push -u origin develop
+ ```
+ 
+ ### 9.2 Konfigurasi Awal (Sekali per Developer)
+ 
+ ```bash
+ git config --global user.name "Nama Lengkap"
+ git config --global user.email "email@kamu.com"
+ 
+ git config --global init.defaultBranch main
+ 
+ # jika Windows
+ git config --global core.autocrlf true
+ ```
+ 
+ ### 9.3 Workflow Fitur Baru (Ringkas)
+ 
+ ```bash
+ # sync develop terbaru
+ git checkout develop
+ git pull origin develop
+ 
+ # buat feature branch
+ git checkout -b feature/nama-fitur
+ 
+ # kerja + commit kecil
+ git add .
+ git commit -m "feat(scope): deskripsi singkat"
+ 
+ # push dan buat PR
+ git push -u origin feature/nama-fitur
+ ```
+ 
+ ### 9.4 Rebase ke Develop (Saat Develop Bergerak)
+ 
+ ```bash
+ git checkout feature/nama-fitur
+ git fetch origin
+ git rebase origin/develop
+ 
+ # jika conflict
+ # selesaikan conflict -> git add -> lanjut
+ git rebase --continue
+ 
+ # push setelah rebase
+ git push --force-with-lease
+ ```
+ 
+ ### 9.5 Hotfix (Produksi)
+ 
+ ```bash
+ # buat hotfix dari main
+ git checkout main
+ git pull origin main
+ git checkout -b hotfix/nama-issue
+ 
+ # commit
+ git add .
+ git commit -m "fix(scope): deskripsi hotfix"
+ 
+ # PR ke main
+ git push -u origin hotfix/nama-issue
+ 
+ # setelah merge ke main, back-merge ke develop
+ git checkout develop
+ git pull origin develop
+ git merge --no-ff main
+ git push origin develop
+ ```
 
