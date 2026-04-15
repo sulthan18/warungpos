@@ -105,6 +105,41 @@ Sebagian besar endpoint memerlukan autentikasi kecuali untuk `Login` dan `Webhoo
   }
   ```
 
+#### 2. Register (Owner)
+- **Method & Path:** `POST /api/v1/auth/register`
+- **Akses:** Public (Khusus pendaftaran Owner pertama kali)
+- **Request Body:**
+  ```json
+  {
+    "name": "Owner Warung",
+    "email": "owner@warungpos.com",
+    "password": "strongpassword"
+  }
+  ```
+- **Response Sukses:**
+  ```json
+  {
+    "success": true,
+    "message": "Pendaftaran berhasil",
+    "data": {
+      "user_id": "uuid-owner-1",
+      "name": "Owner Warung",
+      "role": "owner"
+    }
+  }
+  ```
+
+#### 3. Logout
+- **Method & Path:** `POST /api/v1/auth/logout`
+- **Akses:** Protected (Bearer Token)
+- **Response Sukses:**
+  ```json
+  {
+    "success": true,
+    "message": "Logout berhasil"
+  }
+  ```
+
 ---
 
 ### B. Categories

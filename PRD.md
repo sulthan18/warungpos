@@ -57,8 +57,8 @@ Sistem memiliki dua peran (role) pengguna utama dengan hak akses yang terpisah:
 
 | Role | Deskripsi Akses |
 |------|-----------------|
-| **Owner (Pemilik)** | Akses penuh ke semua modul — operasional dan manajerial. Bertanggung jawab atas master data (produk, kategori, meja, promo, user), pemantauan stok, dan analisis bisnis melalui dashboard laporan. |
-| **Cashier (Kasir)** | Akses terbatas untuk operasional kasir harian. Bertugas membuka/menutup shift, melayani pelanggan, menginput pesanan, memproses pembayaran, dan meninjau riwayat transaksi shift bersangkutan. |
+| **Owner (Pemilik)** | Akses penuh ke semua modul — operasional dan manajerial. Bertanggung jawab atas pendaftaran akun owner pertama kali, manajemen master data (produk, kategori, meja, promo, user), pemantauan stok, dan analisis bisnis melalui dashboard laporan. |
+| **Cashier (Kasir)** | Akses terbatas untuk operasional kasir harian. Bertugas melakukan login/logout harian, membuka/menutup shift, melayani pelanggan, menginput pesanan, dan memproses pembayaran. |
 
 ---
 
@@ -198,7 +198,7 @@ Sistem histori pemesanan ringkas untuk shift aktif.
 
 ---
 
-## 5. Business Rules
+## 6. Business Rules
 
 ### Tentang Stok
 - Stok hanya berkurang setelah webhook Midtrans confirmed diterima
@@ -228,7 +228,7 @@ Sistem histori pemesanan ringkas untuk shift aktif.
 
 ---
 
-## 6. Out of Scope
+## 7. Out of Scope
 
 Hal-hal berikut secara tegas **tidak masuk** dalam lingkup pengerjaan versi ini (v1.0):
 
