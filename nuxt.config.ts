@@ -1,0 +1,14 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  compatibilityDate: '2025-07-15',
+  future: {
+    compatibilityVersion: 4,
+  },
+  devtools: { enabled: true },
+  modules: ['@pinia/nuxt'],
+  alias: {
+    '@features': './src/features',
+    '@shared': './src/shared',
+  },
+  css: ['~/assets/css/main.css'],
+})
