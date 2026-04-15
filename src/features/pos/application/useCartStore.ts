@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { Product, OrderItem } from '@shared/types';
+import type { Product, OrderItem } from '@shared/types/index';
 
 export interface CartItem {
   product: Product;

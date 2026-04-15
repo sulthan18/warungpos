@@ -50,6 +50,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
+import { useAuthStore } from '@features/auth/application/useAuthStore';
 import BaseInput from '@shared/components/BaseInput.vue';
 import BaseButton from '@shared/components/BaseButton.vue';
 
@@ -63,6 +64,7 @@ const form = reactive({
   remember: false
 });
 
+const authStore = useAuthStore();
 const loading = ref(false);
 const error = ref('');
 
@@ -72,18 +74,15 @@ const handleLogin = async () => {
   loading.value = true;
   error.value = '';
 
-  const authStore = useAuthStore();
-
   try {
     const role = form.email.includes('owner') ? 'owner' : 'cashier';
     await authStore.login(role);
     
-    // Middleware will handle redirection, but we can also do it here
-    if (role === 'owner') navigateTo('/owner/dashboard');
-    else navigateTo('/cashier/pos');
+    // REDIRECTION handled by middleware or explicit
+    const target = role === 'owner' ? '/owner/dashboard' : '/cashier/pos';
+    await navigateTo(target);
   } catch (e) {
     error.value = 'Failed to sign in. Please try again.';
-  } finally {
     loading.value = false;
   }
 };

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { Shift } from '@shared/types';
+import type { Shift } from '@shared/types/index';
 import { useAuthStore } from '@features/auth/application/useAuthStore';
 
 export const useShiftStore = defineStore('shift', () => {
