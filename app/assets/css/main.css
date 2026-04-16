@@ -10,6 +10,9 @@
   --border-color: #2e2e2e;
   --radius-lg: 16px;
   --radius-md: 8px;
+  --sidebar-width-owner: 260px;
+  --sidebar-width-cashier: 100px;
+  --header-height: 80px;
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
   --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
