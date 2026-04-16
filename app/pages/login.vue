@@ -110,6 +110,7 @@ const handleLogin = async () => {
   margin-bottom: 8px;
   background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

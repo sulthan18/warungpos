@@ -93,9 +93,10 @@ defineEmits(['add']);
   font-size: 0.8rem;
   color: var(--text-muted);
   line-height: 1.4;
-  display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  display: -webkit-box;
   overflow: hidden;
 }
 
